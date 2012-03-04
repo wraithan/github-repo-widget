@@ -23,8 +23,6 @@ addon.port.on("show", function() {
             } else {
                 repo.append($("<td></td>"));
             }
-            console.log(element);
         });
     });
-    console.log($("#content"));
 });
