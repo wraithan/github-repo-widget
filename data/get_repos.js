@@ -1,6 +1,6 @@
 addon.port.on("show", function() {
     var user = gh.user("wraithan");
-    user.repos(function(data) {
+    user.allRepos(function(data) {
         data.repositories.sort(function(a, b) {
             if ('pushed_at' in a && !('pushed_at' in b)) {
                 return 1;
@@ -37,7 +37,7 @@ addon.port.on("show", function() {
                     homepage = 'http://' + homepage;
                 }
                 repo.append(
-                    $("<td></td>").append($('<a href="' + homepage +'" target="_blank"></a>').append("Home Page"))
+                    $("<td></td>").append($('<a href="' + homepage +'" target="_blank"></a>').append($("<nobr></nobr>").append("Home Page")))
                 );
             } else {
                 repo.append($("<td></td>"));
