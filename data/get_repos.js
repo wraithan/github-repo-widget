@@ -32,8 +32,12 @@ addon.port.on("show", function() {
                 repo.append($("<td></td>"));
             }
             if ('homepage' in element && element.homepage) {
+                var homepage = element.homepage;
+                if (homepage.indexOf('://') == -1) {
+                    homepage = 'http://' + homepage;
+                }
                 repo.append(
-                    $("<td></td>").append($('<a href="' + element.homepage +'" target="_blank"></a>').append("Home Page"))
+                    $("<td></td>").append($('<a href="' + homepage +'" target="_blank"></a>').append("Home Page"))
                 );
             } else {
                 repo.append($("<td></td>"));
