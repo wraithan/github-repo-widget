@@ -1,12 +1,17 @@
 addon.port.on("show", function() {
     var user = gh.user("wraithan");
     user.repos(function(data) {
-        console.log(JSON.stringify(data));
         data.repositories.sort(function(a, b) {
-            if (a.pushed_at < b.pushed_at) {
+            if ('pushed_at' in a && !('pushed_at' in b)) {
                 return 1;
-            } else if (b.pushed_at < a.pushed_at) {
+            } else if ('pushed_at' in b && !('pushed_at' in a)) {
                 return -1;
+            } else if (!('pushed_at' in b) && !('pushed_at' in a)) {
+                return 0;
+            } else if (a.pushed_at < b.pushed_at) {
+                return -1;
+            } else if (b.pushed_at < a.pushed_at) {
+                return 1;
             } else {
                 return 0;
             }
