@@ -1,19 +1,32 @@
 var loaded = false;
 
 addon.port.on("show", function(storage) {
-    if (!loaded) {
-        if (storage.repositories) {
+    if (!loaded || !isCacheValid(storage)) {
+        $("#repositories").html("");
+        addon.port.emit("log", "Loading!");
+        if (storage.repositories && isCacheValid(storage)) {
+            addon.port.emit("log", "From Storage!");
             loadReposIntoPanel(storage.repositories);
         } else {
+            addon.port.emit("log", "From GitHub!");
             var user = gh.user("wraithan");
             user.allRepos(function(data) {
                 loadReposIntoPanel(data.repositories);
-                storage.repositories = data.repositories;
+                addon.port.emit("store", [{"key": "last_updated_at",
+                                           "value": Date.now()},
+                                          {"key": "user",
+                                           "value": "wraithan"},
+                                          {"key": "repositories",
+                                           "value": data.repositories}])
             });
         }
         loaded = true;
     }
 });
+
+function isCacheValid(cache) {
+    return ((Date.now() - cache.last_updated_at) < 1000*60*10)
+}
 
 function loadReposIntoPanel(repositories) {
     repositories.sort(function(a, b) {
