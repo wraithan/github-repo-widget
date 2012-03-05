@@ -1,9 +1,9 @@
 {
-    "name": "github-repo-widget"
+    "name": "github-repo-widget",
     "license": "MIT",
     "author": "Wraithan",
     "version": "1.0",
     "fullName": "GitHub Repo Widget",
     "description": "Shows all of your GitHub repos and has convenient links.",
-    "id": "jid1-Ahuh7zraL1y8YQ",
+    "id": "jid1-Ahuh7zraL1y8YQ"
 }
