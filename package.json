@@ -5,5 +5,16 @@
     "version": "1.0",
     "fullName": "GitHub Repo Widget",
     "description": "Shows all of your GitHub repos and has convenient links.",
-    "id": "jid1-Ahuh7zraL1y8YQ"
+    "id": "jid1-Ahuh7zraL1y8YQ",
+    "preferences": [{
+        "name": "githubUsername",
+        "title": "GitHub Username",
+        "type": "string",
+        "value": ""
+    }, {
+        "name": "refreshRate",
+        "title": "Refresh Rate (minutes)",
+        "type": "integer",
+        "value": 10
+    }]
 }
