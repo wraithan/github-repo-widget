@@ -1,31 +1,33 @@
 var loaded = false;
 
-addon.port.on("show", function(addonData) {
-    if (!loaded || !isCacheValid(addonData)) {
+addon.port.on("show", function(storage) {
+    if (!loaded || !isCacheValid(storage)) {
         $("#repositories").html("");
         addon.port.emit("log", "Loading!");
-        if (addonData.storage.repositories && isCacheValid(addonData)) {
+        if (storage.repositories && isCacheValid(storage)) {
             addon.port.emit("log", "From Storage!");
-            loadReposIntoPanel(addonData.storage.repositories);
+            loadReposIntoPanel(storage.repositories);
         } else {
             addon.port.emit("log", "From GitHub!");
-            var user = gh.user(addonData.prefs.githubUsername);
+            var user = gh.user(storage.prefs.githubUsername);
             user.allRepos(function(data) {
                 loadReposIntoPanel(data.repositories);
                 addon.port.emit("store", [{"key": "last_updated_at",
                                            "value": Date.now()},
-                                          {"key": "user",
+                                          {"key": "githubUsername",
                                            "value": "wraithan"},
                                           {"key": "repositories",
-                                           "value": data.repositories}])
+                                           "value": data.repositories}]);
             });
         }
         loaded = true;
     }
 });
 
-function isCacheValid(addonData) {
-    return ((Date.now() - addonData.storage.last_updated_at) < 1000*60*addonData.prefs.refreshRate)
+function isCacheValid(storage) {
+    return ((Date.now() - storage.last_updated_at)
+            < 1000*60*storage.prefs.refreshRate)
+        && storage.githubUsername == storage.prefs.githubUsername;
 }
 
 function loadReposIntoPanel(repositories) {
