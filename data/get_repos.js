@@ -3,7 +3,7 @@ var loaded = false;
 addon.port.on("show", function(storage) {
     if (!loaded || !isCacheValid(storage)) {
         $("#repositories").html("");
-        addon.port.emit("log", "Loading!");
+        addon.port.emit("log", "Loading! loaded:" + loaded + " cache:" + isCacheValid(storage));
         if (storage.repositories && isCacheValid(storage)) {
             addon.port.emit("log", "From Storage!");
             loadReposIntoPanel(storage.repositories);
