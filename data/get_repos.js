@@ -18,10 +18,8 @@ addon.port.on("show", function(storage) {
             var user = gh.user(storage.prefs.githubUsername);
             user.allRepos(function(data) {
                 loadReposIntoPanel(data.repositories);
-                addon.port.emit("store", [{"key": "last_updated_at",
-                                           "value": Date.now()},
-                                          {"key": "githubUsername",
-                                           "value": "wraithan"},
+                addon.port.emit("store", [{"key": "githubUsername",
+                                           "value": storage.prefs.githubUsername},
                                           {"key": "repositories",
                                            "value": data.repositories}]);
             });
@@ -29,6 +27,12 @@ addon.port.on("show", function(storage) {
         loaded = true;
     }
 });
+
+function refresh() {
+    addon.port.emit("store", [{"key": "last_updated_at",
+                               "value": 0}]);
+    addon.port.emit("refresh");
+}
 
 function isCacheValid(storage) {
     return ((Date.now() - storage.last_updated_at)
@@ -79,4 +83,7 @@ function loadReposIntoPanel(repositories) {
             repo.append($("<td></td>"));
         }
     });
+    addon.port.emit("store", [{"key": "last_updated_at",
+                               "value": Date.now()}])
+
 }
