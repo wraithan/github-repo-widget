@@ -9,6 +9,12 @@ addon.port.on("show", function(storage) {
             loadReposIntoPanel(storage.repositories);
         } else {
             addon.port.emit("log", "From GitHub!");
+            if (!storage.prefs.githubUsername) {
+                addon.port.emit("openPrefs");
+                $("#repositories").append("No GitHub Username found. Please enter one.");
+                loaded = false;
+                return;
+            }
             var user = gh.user(storage.prefs.githubUsername);
             user.allRepos(function(data) {
                 loadReposIntoPanel(data.repositories);
