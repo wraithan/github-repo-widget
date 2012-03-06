@@ -71,6 +71,13 @@ function loadReposIntoPanel(repositories) {
         } else {
             repo.append($("<td></td>"));
         }
+        if (element.has_wiki) {
+            repo.append(
+                $("<td></td>").append($('<a href="' + element.url +'/wiki" target="_blank"></a>').append("Wiki"))
+            );
+        } else {
+            repo.append($("<td></td>"));
+        }
         if ('homepage' in element && element.homepage) {
             var homepage = element.homepage;
             if (homepage.indexOf('://') == -1) {
