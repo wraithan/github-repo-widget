@@ -5,6 +5,10 @@ function log(message) {
     addon.port.emit('log','get_repos.js: ' + message);
 }
 
+function openPrefs() {
+    addon.port.emit('openPrefs');
+}
+
 addon.port.on("show", function(storage) {
     if (!loaded || !isCacheValid(storage)) {
         $("#repositories").html("");
@@ -15,7 +19,6 @@ addon.port.on("show", function(storage) {
         } else {
             log("From GitHub!");
             if (!storage.prefs.githubUsername) {
-                addon.port.emit("openPrefs");
                 $("#repositories").append("No GitHub Username found. Please enter one.");
                 loaded = false;
                 return;
@@ -43,7 +46,6 @@ addon.port.on("show", function(storage) {
                     user.watching(processRepos);
                 }
             } else {
-                addon.port.emit("openPrefs");
                 $("#repositories").append("No GitHub API Token found. Please enter one to use these tabs.");
             }
         }
