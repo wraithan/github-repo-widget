@@ -12,6 +12,11 @@
         "type": "string",
         "value": ""
     }, {
+        "name": "githubAPIToken",
+        "title": "GitHub API Token (optional)",
+        "type": "string",
+        "value": ""
+    }, {
         "name": "refreshRate",
         "title": "Refresh Rate (minutes)",
         "type": "integer",

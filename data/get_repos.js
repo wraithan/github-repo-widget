@@ -1,4 +1,5 @@
 var loaded = false;
+var tab = 'user';
 
 function log(message) {
     addon.port.emit('log','get_repos.js: ' + message);
@@ -19,14 +20,31 @@ addon.port.on("show", function(storage) {
                 loaded = false;
                 return;
             }
+            if (storage.prefs.githubAPIToken) {
+                gh.authenticate(storage.prefs.githubUsername,
+                                storage.prefs.githubAPIToken);
+            }
             var user = gh.user(storage.prefs.githubUsername);
-            user.allRepos(function(data) {
+            var processRepos = function(data) {
                 loadReposIntoPanel(data.repositories, storage);
                 addon.port.emit("store", [{"key": "githubUsername",
                                            "value": storage.prefs.githubUsername},
                                           {"key": "repositories",
-                                           "value": data.repositories}]);
-            });
+                                           "value": data.repositories},
+                                          {"key": "tab",
+                                           "value": tab}]);
+            }
+            if (tab == 'user') {
+                user.allRepos(processRepos);
+            } else if (storage.prefs.githubAPIToken) {
+                if (tab == 'orgs') {
+                    user.allOrgRepos(processRepos);
+                } else if (tab == 'watched') {
+                    user.watching(processRepos);
+                }
+            } else {
+                $("#repositories").append("No GitHub API Token found. Please enter one to use these tabs.");
+            }
         }
         loaded = true;
     }
@@ -45,25 +63,32 @@ function refresh() {
 function selectActiveTab(name) {
     $('.active').removeClass('active');
     $('.' + name).addClass('active');
+    tab = name;
 }
 
 function userRepos() {
-    selectActiveTab('user');
     log("userRepos");
+    selectActiveTab('user');
+    addon.port.emit("refresh");
 }
 
 function orgRepos() {
-    selectActiveTab('orgs');
     log("orgRepos");
+    selectActiveTab('orgs');
+    addon.port.emit("refresh");
 }
 
 function watchedRepos() {
-    selectActiveTab('watched');
     log("watchedRepos");
+    selectActiveTab('watched');
+    addon.port.emit("refresh");
 }
 
 function isCacheValid(storage) {
-    return ((Date.now() - storage.last_updated_at) < 1000*60*storage.prefs.refreshRate) && storage.githubUsername == storage.prefs.githubUsername;
+    var newEnough = ((Date.now() - storage.last_updated_at) < 1000*60*storage.prefs.refreshRate);
+    var sameUser = storage.githubUsername == storage.prefs.githubUsername;
+    var sameTab = storage.tab == tab;
+    return newEnough && sameUser && sameTab;
 }
 
 function loadReposIntoPanel(repositories, storage) {
