@@ -1,14 +1,18 @@
 var loaded = false;
 
+function log(message) {
+    addon.emit.log('get_repos.js: ' + message);
+}
+
 addon.port.on("show", function(storage) {
     if (!loaded || !isCacheValid(storage)) {
         $("#repositories").html("");
-        addon.port.emit("log", "Loading! loaded:" + loaded + " cache:" + isCacheValid(storage));
+        log("Loading! loaded:" + loaded + " cache:" + isCacheValid(storage));
         if (storage.repositories && isCacheValid(storage)) {
-            addon.port.emit("log", "From Storage!");
+            log("From Storage!");
             loadReposIntoPanel(storage.repositories, storage);
         } else {
-            addon.port.emit("log", "From GitHub!");
+            log("From GitHub!");
             if (!storage.prefs.githubUsername) {
                 addon.port.emit("openPrefs");
                 $("#repositories").append("No GitHub Username found. Please enter one.");
