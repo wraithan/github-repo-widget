@@ -12,7 +12,20 @@
 
   <body>
     <div id="content">
-      <button onClick="refresh()">Refresh</button>
+      <ul class="nav nav-tabs">
+        <li>
+          <a href="#" onClick="refresh()">Refresh</a>
+        </li>
+        <li>
+          <a href="#" onClick="userRepos()">Mine</a>
+        </li>
+        <li>
+          <a href="#" onClick="orgRepos()">Orgs</a>
+        </li>
+        <li>
+          <a href="#" onClick="watchedRepos()">Watched</a>
+        </li>
+      </ul>
       <table id=repositories>
       </table>
     </div>

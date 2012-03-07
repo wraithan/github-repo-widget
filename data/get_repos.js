@@ -42,6 +42,18 @@ function refresh() {
     addon.port.emit("refresh");
 }
 
+function userRepos() {
+    log("userRepos");
+}
+
+function orgRepos() {
+    log("orgRepos");
+}
+
+function watchedRepos() {
+    log("watchedRepos");
+}
+
 function isCacheValid(storage) {
     return ((Date.now() - storage.last_updated_at) < 1000*60*storage.prefs.refreshRate) && storage.githubUsername == storage.prefs.githubUsername;
 }
