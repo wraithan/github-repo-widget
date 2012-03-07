@@ -12,8 +12,24 @@
 
   <body>
     <div id="content">
-      <button onClick="refresh()">Refresh</button>
-      <table id=repositories>
+      <ul class="nav nav-tabs">
+        <li class="refresh">
+          <a href="#" onClick="refresh()"><img src="github.ico"></img></a>
+        </li>
+        <li class="prefs">
+          <a href="#" onClick="openPrefs()"><img src="github.ico"></img></a>
+        </li>
+        <li class="user active">
+          <a href="#" onClick="selectActiveTab('user')">Mine</a>
+        </li>
+        <li class="orgs">
+          <a href="#" onClick="selectActiveTab('orgs')">Orgs</a>
+        </li>
+        <li class="watched">
+          <a href="#" onClick="selectActiveTab('watched')">Watched</a>
+        </li>
+      </ul>
+      <table id="repositories">
       </table>
     </div>
   </body>
