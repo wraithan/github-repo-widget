@@ -64,14 +64,10 @@ function refresh() {
 }
 
 function selectActiveTab(name) {
+    log('Tab change: ' + name);
     $('.active').removeClass('active');
     $('.' + name).addClass('active');
     tab = name;
-}
-
-function changeTab(tab) {
-    log("change tab: " + tab);
-    selectActiveTab(tab);
     addon.port.emit("refresh");
 }
 
