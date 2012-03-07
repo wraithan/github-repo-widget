@@ -1,7 +1,7 @@
 var loaded = false;
 
 function log(message) {
-    addon.emit.log('get_repos.js: ' + message);
+    addon.port.emit('log','get_repos.js: ' + message);
 }
 
 addon.port.on("show", function(storage) {
