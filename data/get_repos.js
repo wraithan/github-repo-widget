@@ -124,5 +124,4 @@ function loadReposIntoPanel(repositories, storage) {
     });
     addon.port.emit("store", [{"key": "last_updated_at",
                                "value": Date.now()}]);
-
 }
