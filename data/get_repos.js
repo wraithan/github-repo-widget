@@ -68,7 +68,7 @@ function selectActiveTab(name) {
     $('.active').removeClass('active');
     $('.' + name).addClass('active');
     tab = name;
-    addon.port.emit("refresh");
+    refresh();
 }
 
 function isCacheValid(storage) {
