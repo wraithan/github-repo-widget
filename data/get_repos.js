@@ -94,28 +94,25 @@ function loadReposIntoPanel(repositories, storage) {
             return 0;
         }
     });
+    var link = function(url, name) {
+        $("<td></td>").append($('<a href="' + url +'" target="_blank"></a>').append(name));
+    }
     repositories.forEach(function(element) {
         var repo = $('<tr class="repo"></tr>');
         $("#repositories").append(repo);
 
         repo.append($('<td class="name"></td>').append(element.name));
-        repo.append(
-            $("<td></td>").append($('<a href="' + element.url +'" target="_blank"></a>').append("Code"))
-        );
+        repo.append(link(element.url, 'Code'));
         if (storage.prefs.showIssues) {
             if (element.has_issues) {
-                repo.append(
-                    $("<td></td>").append($('<a href="' + element.url +'/issues" target="_blank"></a>').append("Issues"))
-                );
+                repo.append(link(element.url+'/issues', 'Issues'));
             } else {
                 repo.append($("<td></td>"));
             }
         }
         if (storage.prefs.showWiki) {
             if (element.has_wiki) {
-                repo.append(
-                    $("<td></td>").append($('<a href="' + element.url +'/wiki" target="_blank"></a>').append("Wiki"))
-                );
+                repo.append(link(element.url+'/wiki', 'Wiki'));
             } else {
                 repo.append($("<td></td>"));
             }
@@ -126,9 +123,7 @@ function loadReposIntoPanel(repositories, storage) {
                 if (homepage.indexOf('://') == -1) {
                     homepage = 'http://' + homepage;
                 }
-                repo.append(
-                    $("<td></td>").append($('<a href="' + homepage +'" target="_blank"></a>').append($("<nobr></nobr>").append("Home Page")))
-                );
+                repo.append(link(homepage, "Home Page"));
             } else {
                 repo.append($("<td></td>"));
             }
