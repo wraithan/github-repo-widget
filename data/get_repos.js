@@ -36,7 +36,7 @@ addon.port.on("show", function(storage) {
                                            "value": data.repositories},
                                           {"key": "tab",
                                            "value": tab}]);
-            }
+            };
             if (tab == 'user') {
                 user.allRepos(processRepos);
             } else if (storage.prefs.githubAPIToken) {
