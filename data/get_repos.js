@@ -6,7 +6,7 @@ addon.port.on("show", function(storage) {
         addon.port.emit("log", "Loading! loaded:" + loaded + " cache:" + isCacheValid(storage));
         if (storage.repositories && isCacheValid(storage)) {
             addon.port.emit("log", "From Storage!");
-            loadReposIntoPanel(storage.repositories);
+            loadReposIntoPanel(storage.repositories, storage);
         } else {
             addon.port.emit("log", "From GitHub!");
             if (!storage.prefs.githubUsername) {
@@ -17,7 +17,7 @@ addon.port.on("show", function(storage) {
             }
             var user = gh.user(storage.prefs.githubUsername);
             user.allRepos(function(data) {
-                loadReposIntoPanel(data.repositories);
+                loadReposIntoPanel(data.repositories, storage);
                 addon.port.emit("store", [{"key": "githubUsername",
                                            "value": storage.prefs.githubUsername},
                                           {"key": "repositories",
@@ -26,6 +26,10 @@ addon.port.on("show", function(storage) {
         }
         loaded = true;
     }
+});
+
+addon.port.on("displayPreferenceChanged", function() {
+    loaded = false;
 });
 
 function refresh() {
@@ -40,7 +44,7 @@ function isCacheValid(storage) {
         && storage.githubUsername == storage.prefs.githubUsername;
 }
 
-function loadReposIntoPanel(repositories) {
+function loadReposIntoPanel(repositories, storage) {
     repositories.sort(function(a, b) {
         if ('pushed_at' in a && !('pushed_at' in b)) {
             return -1;
@@ -64,30 +68,36 @@ function loadReposIntoPanel(repositories) {
         repo.append(
             $("<td></td>").append($('<a href="' + element.url +'" target="_blank"></a>').append("Code"))
         );
-        if (element.has_issues) {
-            repo.append(
-                $("<td></td>").append($('<a href="' + element.url +'/issues" target="_blank"></a>').append("Issues"))
-            );
-        } else {
-            repo.append($("<td></td>"));
-        }
-        if (element.has_wiki) {
-            repo.append(
-                $("<td></td>").append($('<a href="' + element.url +'/wiki" target="_blank"></a>').append("Wiki"))
-            );
-        } else {
-            repo.append($("<td></td>"));
-        }
-        if ('homepage' in element && element.homepage) {
-            var homepage = element.homepage;
-            if (homepage.indexOf('://') == -1) {
-                homepage = 'http://' + homepage;
+        if (storage.prefs.showIssues) {
+            if (element.has_issues) {
+                repo.append(
+                    $("<td></td>").append($('<a href="' + element.url +'/issues" target="_blank"></a>').append("Issues"))
+                );
+            } else {
+                repo.append($("<td></td>"));
             }
-            repo.append(
-                $("<td></td>").append($('<a href="' + homepage +'" target="_blank"></a>').append($("<nobr></nobr>").append("Home Page")))
-            );
-        } else {
-            repo.append($("<td></td>"));
+        }
+        if (storage.prefs.showWiki) {
+            if (element.has_wiki) {
+                repo.append(
+                    $("<td></td>").append($('<a href="' + element.url +'/wiki" target="_blank"></a>').append("Wiki"))
+                );
+            } else {
+                repo.append($("<td></td>"));
+            }
+        }
+        if (storage.prefs.showHomePage) {
+            if ('homepage' in element && element.homepage) {
+                var homepage = element.homepage;
+                if (homepage.indexOf('://') == -1) {
+                    homepage = 'http://' + homepage;
+                }
+                repo.append(
+                    $("<td></td>").append($('<a href="' + homepage +'" target="_blank"></a>').append($("<nobr></nobr>").append("Home Page")))
+                );
+            } else {
+                repo.append($("<td></td>"));
+            }
         }
     });
     addon.port.emit("store", [{"key": "last_updated_at",

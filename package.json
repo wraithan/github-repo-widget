@@ -16,5 +16,20 @@
         "title": "Refresh Rate (minutes)",
         "type": "integer",
         "value": 10
+    }, {
+        "name": "showIssues",
+        "title": "Show Issues",
+        "type": "bool",
+        "value": true
+    }, {
+        "name": "showWiki",
+        "title": "Show Wiki",
+        "type": "bool",
+        "value": true
+    }, {
+        "name": "showHomePage",
+        "title": "Show Home PAge",
+        "type": "bool",
+        "value": true
     }]
 }
