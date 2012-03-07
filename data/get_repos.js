@@ -42,15 +42,23 @@ function refresh() {
     addon.port.emit("refresh");
 }
 
+function selectActiveTab(name) {
+    $('.active').removeClass('active');
+    $('.' + name).addClass('active');
+}
+
 function userRepos() {
+    selectActiveTab('user');
     log("userRepos");
 }
 
 function orgRepos() {
+    selectActiveTab('orgs');
     log("orgRepos");
 }
 
 function watchedRepos() {
+    selectActiveTab('watched');
     log("watchedRepos");
 }
 
