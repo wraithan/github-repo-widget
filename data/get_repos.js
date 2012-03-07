@@ -43,6 +43,7 @@ addon.port.on("show", function(storage) {
                     user.watching(processRepos);
                 }
             } else {
+                addon.port.emit("openPrefs");
                 $("#repositories").append("No GitHub API Token found. Please enter one to use these tabs.");
             }
         }
