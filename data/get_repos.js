@@ -43,9 +43,7 @@ function refresh() {
 }
 
 function isCacheValid(storage) {
-    return ((Date.now() - storage.last_updated_at)
-            < 1000*60*storage.prefs.refreshRate)
-        && storage.githubUsername == storage.prefs.githubUsername;
+    return ((Date.now() - storage.last_updated_at) < 1000*60*storage.prefs.refreshRate) && storage.githubUsername == storage.prefs.githubUsername;
 }
 
 function loadReposIntoPanel(repositories, storage) {
@@ -105,6 +103,6 @@ function loadReposIntoPanel(repositories, storage) {
         }
     });
     addon.port.emit("store", [{"key": "last_updated_at",
-                               "value": Date.now()}])
+                               "value": Date.now()}]);
 
 }
