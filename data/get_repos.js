@@ -69,21 +69,9 @@ function selectActiveTab(name) {
     tab = name;
 }
 
-function userRepos() {
-    log("userRepos");
-    selectActiveTab('user');
-    addon.port.emit("refresh");
-}
-
-function orgRepos() {
-    log("orgRepos");
-    selectActiveTab('orgs');
-    addon.port.emit("refresh");
-}
-
-function watchedRepos() {
-    log("watchedRepos");
-    selectActiveTab('watched');
+function changeTab(tab) {
+    log("change tab: " + tab);
+    selectActiveTab(tab);
     addon.port.emit("refresh");
 }
 
