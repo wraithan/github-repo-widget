@@ -1,26 +1,29 @@
-var loaded = false;
-var tab = 'user';
+if (typeof(githubRepoWidget) === "undefined") {
+    var githubRepoWidget = {};
+}
 
-function log(message) {
+githubRepoWidget.loaded = false;
+githubRepoWidget.tab = 'user';
+
+githubRepoWidget.log = function(message) {
     addon.port.emit('log','get_repos.js: ' + message);
 }
 
-function openPrefs() {
+githubRepoWidget.openPrefs = function() {
     addon.port.emit('openPrefs');
 }
 
 addon.port.on("show", function(storage) {
-    if (!loaded || !isCacheValid(storage)) {
+    if (!githubRepoWidget.loaded || !githubRepoWidget.isCacheValid(storage)) {
         $("#repositories").html("");
-        log("Loading! loaded:" + loaded + " cache:" + isCacheValid(storage));
-        if (storage.repositories && isCacheValid(storage)) {
-            log("From Storage!");
-            loadReposIntoPanel(storage.repositories, storage);
+        if (storage.repositories && githubRepoWidget.isCacheValid(storage)) {
+            githubRepoWidget.log("From Storage!");
+            githubRepoWidget.loadReposIntoPanel(storage.repositories, storage);
         } else {
-            log("From GitHub!");
+            githubRepoWidget.log("From GitHub!");
             if (!storage.prefs.githubUsername) {
                 $("#repositories").append("No GitHub Username found. Please enter one.");
-                loaded = false;
+                githubRepoWidget.loaded = false;
                 return;
             }
             if (storage.prefs.githubAPIToken) {
@@ -29,56 +32,56 @@ addon.port.on("show", function(storage) {
             }
             var user = gh.user(storage.prefs.githubUsername);
             var processRepos = function(data) {
-                loadReposIntoPanel(data.repositories, storage);
+                githubRepoWidget.loadReposIntoPanel(data.repositories, storage);
                 addon.port.emit("store", [{"key": "githubUsername",
                                            "value": storage.prefs.githubUsername},
                                           {"key": "repositories",
                                            "value": data.repositories},
                                           {"key": "tab",
-                                           "value": tab}]);
+                                           "value": githubRepoWidget.tab}]);
             };
-            if (tab == 'user') {
+            if (githubRepoWidget.tab == 'user') {
                 user.allRepos(processRepos);
             } else if (storage.prefs.githubAPIToken) {
-                if (tab == 'orgs') {
+                if (githubRepoWidget.tab == 'orgs') {
                     user.allOrgRepos(processRepos);
-                } else if (tab == 'watched') {
+                } else if (githubRepoWidget.tab == 'watched') {
                     user.watching(processRepos);
                 }
             } else {
                 $("#repositories").append("No GitHub API Token found. Please enter one to use these tabs.");
             }
         }
-        loaded = true;
+        githubRepoWidget.loaded = true;
     }
 });
 
 addon.port.on("displayPreferenceChanged", function() {
-    loaded = false;
+    githubRepoWidget.loaded = false;
 });
 
-function refresh() {
+githubRepoWidget.refresh = function() {
     addon.port.emit("store", [{"key": "last_updated_at",
                                "value": 0}]);
     addon.port.emit("refresh");
 }
 
-function selectActiveTab(name) {
-    log('Tab change: ' + name);
+githubRepoWidget.selectActiveTab = function(name) {
+    githubRepoWidget.log('Tab change: ' + name);
     $('.active').removeClass('active');
     $('.' + name).addClass('active');
-    tab = name;
-    refresh();
+    githubRepoWidget.tab = name;
+    githubRepoWidget.refresh();
 }
 
-function isCacheValid(storage) {
+githubRepoWidget.isCacheValid = function(storage) {
     var newEnough = ((Date.now() - storage.last_updated_at) < 1000*60*storage.prefs.refreshRate);
     var sameUser = storage.githubUsername == storage.prefs.githubUsername;
-    var sameTab = storage.tab == tab;
+    var sameTab = storage.tab == githubRepoWidget.tab;
     return newEnough && sameUser && sameTab;
 }
 
-function loadReposIntoPanel(repositories, storage) {
+githubRepoWidget.loadReposIntoPanel = function(repositories, storage) {
     repositories.sort(function(a, b) {
         if ('pushed_at' in a && !('pushed_at' in b)) {
             return -1;
@@ -94,14 +97,17 @@ function loadReposIntoPanel(repositories, storage) {
             return 0;
         }
     });
+    var nobr = function(content) {
+        return $('<nobr>' + content + '</nobr>');
+    }
     var link = function(url, name) {
-        $("<td></td>").append($('<a href="' + url +'" target="_blank"></a>').append(name));
+        return $("<td></td>").append($('<a href="' + url +'" target="_blank"></a>').append(nobr(name)));
     }
     repositories.forEach(function(element) {
         var repo = $('<tr class="repo"></tr>');
         $("#repositories").append(repo);
 
-        repo.append($('<td class="name"></td>').append(element.name));
+        repo.append($('<td class="name"></td>').append(nobr(element.name)));
         repo.append(link(element.url, 'Code'));
         if (storage.prefs.showIssues) {
             if (element.has_issues) {
