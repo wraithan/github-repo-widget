@@ -2,7 +2,7 @@
     "name": "github-repo-widget",
     "license": "MIT",
     "author": "Wraithan",
-    "version": "1.1",
+    "version": "1.2",
     "fullName": "GitHub Repo Widget",
     "description": "Shows all of your GitHub repos and has convenient links.",
     "id": "jid1-Ahuh7zraL1y8YQ",
@@ -12,9 +12,29 @@
         "type": "string",
         "value": ""
     }, {
+        "name": "githubAPIToken",
+        "title": "GitHub API Token (optional)",
+        "type": "string",
+        "value": ""
+    }, {
         "name": "refreshRate",
         "title": "Refresh Rate (minutes)",
         "type": "integer",
         "value": 10
+    }, {
+        "name": "showIssues",
+        "title": "Show Issues",
+        "type": "bool",
+        "value": true
+    }, {
+        "name": "showWiki",
+        "title": "Show Wiki",
+        "type": "bool",
+        "value": true
+    }, {
+        "name": "showHomePage",
+        "title": "Show Home PAge",
+        "type": "bool",
+        "value": true
     }]
 }

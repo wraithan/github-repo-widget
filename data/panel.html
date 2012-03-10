@@ -4,6 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <head>
     <title>PANEL</title>
+    <style>
+      .nav-tabs > li > a.images {
+      padding-top: 7px;
+      padding-bottom: 6px;
+      }
+    </style>
     <link rel="stylesheet" href="bootstrap.min.css"></link>
     <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="github.min.js"></script>
@@ -12,8 +18,24 @@
 
   <body>
     <div id="content">
-      <button onClick="refresh()">Refresh</button>
-      <table id=repositories>
+      <ul class="nav nav-tabs">
+        <li class="user active">
+          <a href="#" onClick="githubRepoWidget.selectActiveTab('user')">Mine</a>
+        </li>
+        <li class="orgs">
+          <a href="#" onClick="githubRepoWidget.selectActiveTab('orgs')">Orgs</a>
+        </li>
+        <li class="watched">
+          <a href="#" onClick="githubRepoWidget.selectActiveTab('watched')">Watched</a>
+        </li>
+        <li class="refresh">
+          <a class="images" href="#" onClick="githubRepoWidget.refresh()"><img src="reload_14x16.png" alt="refresh" title="refresh"></img></a>
+        </li>
+        <li class="prefs">
+          <a class="images" href="#" onClick="githubRepoWidget.openPrefs()"><img src="equalizer_16x16.png" alt="preferences" title="preferences"></img></a>
+        </li>
+      </ul>
+      <table id="repositories">
       </table>
     </div>
   </body>
