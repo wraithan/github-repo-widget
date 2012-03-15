@@ -10,7 +10,7 @@
         "name": "githubUsername",
         "title": "GitHub Username",
         "type": "string",
-        "value": "wraithan"
+        "value": ""
     }, {
         "name": "githubAPIToken",
         "title": "GitHub API Token (optional)",
