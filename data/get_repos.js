@@ -26,12 +26,14 @@ addon.port.on("show", function(storage) {
                 githubRepoWidget.loaded = false;
                 return;
             }
+            var user = ""
             if (storage.prefs.githubAPIToken) {
-                gh.authenticate(storage.prefs.githubUsername,
-                                storage.prefs.githubAPIToken);
+                user = github.authenticate(storage.prefs.githubUsername,
+                                           storage.prefs.githubAPIToken);
             }
-            var user = gh.user(storage.prefs.githubUsername);
+            user = github.user(storage.prefs.githubUsername);
             var processRepos = function(data) {
+                githubRepoWidget.log(data);
                 githubRepoWidget.loadReposIntoPanel(data.repositories, storage);
                 addon.port.emit("store", [{"key": "githubUsername",
                                            "value": storage.prefs.githubUsername},
@@ -41,7 +43,7 @@ addon.port.on("show", function(storage) {
                                            "value": githubRepoWidget.tab}]);
             };
             if (githubRepoWidget.tab == 'user') {
-                user.allRepos(processRepos);
+                user.getRepos(processRepos);
             } else if (storage.prefs.githubAPIToken) {
                 if (githubRepoWidget.tab == 'orgs') {
                     user.allOrgRepos(processRepos);
