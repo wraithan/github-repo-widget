@@ -80,11 +80,13 @@ githubRepoWidget.isCacheValid = function(storage) {
 }
 
 githubRepoWidget.loadReposIntoPanel = function(data, storage) {
+    var repositories = data;
     if (data === null) {
         $("#repositories").append("No repositories found.");
         return;
+    } else if ("repositories" in data) {
+        repositories = data.repositories;
     }
-    var repositories = data.repositories;
     repositories.sort(function(a, b) {
         if ('pushed_at' in a && !('pushed_at' in b)) {
             return -1;
