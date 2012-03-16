@@ -33,7 +33,7 @@
         "value": true
     }, {
         "name": "showHomePage",
-        "title": "Show Home PAge",
+        "title": "Show Home Page",
         "type": "bool",
         "value": true
     }]
