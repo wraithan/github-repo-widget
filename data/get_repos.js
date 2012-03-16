@@ -26,24 +26,8 @@ addon.port.on("show", function(storage) {
                 githubRepoWidget.loaded = false;
                 return;
             }
-            var user = ""
-            if (storage.prefs.githubAPIToken) {
-                user = github.authenticate(storage.prefs.githubUsername,
-                                           storage.prefs.githubAPIToken);
-            }
-            user = github.user(storage.prefs.githubUsername);
-            var processRepos = function(data) {
-                githubRepoWidget.log(data);
-                githubRepoWidget.loadReposIntoPanel(data.repositories, storage);
-                addon.port.emit("store", [{"key": "githubUsername",
-                                           "value": storage.prefs.githubUsername},
-                                          {"key": "repositories",
-                                           "value": data.repositories},
-                                          {"key": "tab",
-                                           "value": githubRepoWidget.tab}]);
-            };
             if (githubRepoWidget.tab == 'user') {
-                user.getRepos(processRepos);
+                addon.port.emit('loadAllRepos');
             } else if (storage.prefs.githubAPIToken) {
                 if (githubRepoWidget.tab == 'orgs') {
                     user.allOrgRepos(processRepos);
@@ -56,6 +40,18 @@ addon.port.on("show", function(storage) {
         }
         githubRepoWidget.loaded = true;
     }
+});
+
+addon.port.on('loadPane', function(repos, storage) {
+    githubRepoWidget.log('loadPane');
+    githubRepoWidget.loadReposIntoPanel(repos, storage);
+    addon.port.emit("store", [{"key": "githubUsername",
+                               "value": storage.prefs.githubUsername},
+                              {"key": "repositories",
+                               "value": repos},
+                              {"key": "tab",
+                               "value": githubRepoWidget.tab}]);
+
 });
 
 addon.port.on("displayPreferenceChanged", function() {
