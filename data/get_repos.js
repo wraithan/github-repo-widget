@@ -30,9 +30,9 @@ addon.port.on("show", function(storage) {
                 addon.port.emit('loadAllRepos');
             } else if (storage.prefs.githubAPIToken) {
                 if (githubRepoWidget.tab == 'orgs') {
-                    user.allOrgRepos(processRepos);
+                    addon.port.emit('loadOrgRepos');
                 } else if (githubRepoWidget.tab == 'watched') {
-                    user.watching(processRepos);
+                    addon.port.emit('loadWatchedRepos');
                 }
             } else {
                 $("#repositories").append("No GitHub API Token found. Please enter one to use these tabs.");
@@ -79,7 +79,12 @@ githubRepoWidget.isCacheValid = function(storage) {
     return newEnough && sameUser && sameTab;
 }
 
-githubRepoWidget.loadReposIntoPanel = function(repositories, storage) {
+githubRepoWidget.loadReposIntoPanel = function(data, storage) {
+    if (data === null) {
+        $("#repositories").append("No repositories found.");
+        return;
+    }
+    var repositories = data.repositories;
     repositories.sort(function(a, b) {
         if ('pushed_at' in a && !('pushed_at' in b)) {
             return -1;
