@@ -86,6 +86,9 @@ githubRepoWidget.loadReposIntoPanel = function(data, storage) {
         return;
     } else if ('repositories' in data) {
         repositories = data.repositories;
+    } else if ('error' in data) {
+        $('#repositories').append($('<p>', {text: data.error}));
+        return;
     }
     repositories.sort(function(a, b) {
         if ('pushed_at' in a && !('pushed_at' in b)) {
